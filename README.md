@@ -1,3 +1,8 @@
+### mebitek Etar Fork
+
+* #### current features
+  - view task on day and week view
+
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar
 Etar (from Arabic:  `إِيتَار`)  is an open source material designed calendar made for everyone!

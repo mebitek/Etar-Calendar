@@ -41,19 +41,21 @@ import ws.xsoh.etar.R
 class CalendarPreferences : PreferenceFragmentCompat() {
 
     private var calendarId: Long = -1
+    private var isTask: Boolean = false;
     private lateinit var calendarRepository: CalendarRepository
     private lateinit var account: Account
     private var numberOfEvents: Long = -1
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         calendarId = requireArguments().getLong(ARG_CALENDAR_ID)
+        isTask = requireArguments().getBoolean(ARG_IS_TASKS)
         calendarRepository = CalendarRepository(requireActivity().application)
-        account = calendarRepository.queryAccount(calendarId)!!
-        numberOfEvents = calendarRepository.queryNumberOfEvents(calendarId)!!
+        account = calendarRepository.queryAccount(calendarId, isTask)!!
+        numberOfEvents = calendarRepository.queryNumberOfEvents(calendarId, isTask)!!
 
         // use custom data store to save/retrieve calendar preferences in Android's calendar database
         val preferenceManager = preferenceManager
-        preferenceManager.preferenceDataStore = CalendarDataStore(requireActivity(), calendarId)
+        preferenceManager.preferenceDataStore = CalendarDataStore(requireActivity(), calendarId, isTask)
 
         populatePreferences()
     }
@@ -244,7 +246,7 @@ class CalendarPreferences : PreferenceFragmentCompat() {
         const val COLOR_PICKER_DIALOG_TAG = "CalendarColorPickerDialog"
 
         const val ARG_CALENDAR_ID = "calendarId"
-
+        const val ARG_IS_TASKS = "isTasks"
         const val SYNCHRONIZE_KEY = "synchronize"
         const val VISIBLE_KEY = "visible"
         const val COLOR_KEY = "color"
