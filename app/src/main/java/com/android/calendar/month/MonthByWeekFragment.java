@@ -53,10 +53,7 @@ import com.android.calendar.Utils;
 import com.android.calendar.event.CreateEventDialogFragment;
 import com.android.calendarcommon2.Time;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import ws.xsoh.etar.R;
 
@@ -400,6 +397,12 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
             ArrayList<Event> events = new ArrayList<Event>();
             Event.buildEventsFromCursor(
                     events, data, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+
+            Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), Event.TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+            Event.buildTasksFromCursor(events, cTasks, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+
+            Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
+
             ((MonthByWeekAdapter) mAdapter).setEvents(mFirstLoadedJulianDay,
                     mLastLoadedJulianDay - mFirstLoadedJulianDay + 1, events);
         }
