@@ -209,6 +209,10 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
     private MenuItem mSearchMenu;
     private MenuItem mControlsMenu;
     private MenuItem mViewSettings;
+
+    private MenuItem mViewAgendaEvents;
+
+    private MenuItem mViewAgendaTasks;
     private Menu mOptionsMenu;
     private QueryHandler mHandler;
     private final Runnable mHomeTimeUpdater = new Runnable() {
@@ -831,6 +835,18 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
         }
     }
 
+    protected void updateViewAgentaSwitchVisibility() {
+        boolean viewAgendaSwitchVisible = mController.getViewType() == ViewType.AGENDA;
+        if (mViewAgendaTasks != null) {
+            mViewAgendaTasks.setVisible(viewAgendaSwitchVisible);
+            mViewAgendaTasks.setEnabled(viewAgendaSwitchVisible);
+        }
+        if (mViewAgendaEvents != null) {
+            mViewAgendaEvents.setVisible(viewAgendaSwitchVisible && !mViewAgendaTasks.isVisible());
+            mViewAgendaEvents.setEnabled(viewAgendaSwitchVisible);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -874,6 +890,10 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
 
         mViewSettings = menu.findItem(R.id.action_view_settings);
         updateViewSettingsVisiblility();
+
+        mViewAgendaEvents = menu.findItem(R.id.action_view_agenda_events);
+        mViewAgendaTasks = menu.findItem(R.id.action_view_agenda_tasks);
+        updateViewAgentaSwitchVisibility();
 
 
         MenuItem menuItem = menu.findItem(R.id.action_today);
@@ -973,7 +993,28 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
             startActivity(intent);
         } else if (itemId == R.id.action_info) {
             checkAndRequestDisablingDoze();
-        } else {
+        } else if (itemId == R.id.action_view_agenda_tasks || itemId == R.id.action_view_agenda_events) {
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                long millis = Utils.timeFromIntentInMillis(getIntent());
+                AgendaFragment frag = new AgendaFragment(millis, false);
+
+                if (itemId == R.id.action_view_agenda_tasks) {
+                    frag.isTask = true;
+                    mOptionsMenu.findItem(R.id.action_view_agenda_events).setVisible(true);
+                } else if (itemId == R.id.action_view_agenda_events) {
+                    frag.isTask = false;
+                    mOptionsMenu.findItem(R.id.action_view_agenda_tasks).setVisible(true);
+                }
+                item.setVisible(false);
+
+                transaction.replace(R.id.main_pane, frag);
+                mController.registerEventHandler(R.id.main_pane, (EventHandler) frag);
+                transaction.commit();
+
+
+                return false;
+            } else {
                 return mExtensions.handleItemSelected(item, this);
         }
 
@@ -1346,6 +1387,7 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
                 }
             }
             updateViewSettingsVisiblility();
+            updateViewAgentaSwitchVisibility();
             displayTime = event.selectedTime != null ? event.selectedTime.toMillis()
                     : event.startTime.toMillis();
             if (!mIsTabletConfig) {
