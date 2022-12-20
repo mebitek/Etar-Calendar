@@ -27,10 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
+import androidx.preference.*
 import com.android.calendar.persistence.Calendar
 import ws.xsoh.etar.R
 
@@ -40,6 +37,8 @@ class MainListPreferences : PreferenceFragmentCompat() {
     private lateinit var mainListViewModel: MainListViewModel
 
     private var currentCalendars = mutableSetOf<Long>()
+
+    private var VIEW_ALL_PREFERENCE = "viewAllPreference"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val context = preferenceManager.context
@@ -61,12 +60,13 @@ class MainListPreferences : PreferenceFragmentCompat() {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         mainListViewModel.getCalendarsOrderedByAccount().observe(viewLifecycleOwner, Observer<List<Calendar>> { calendars ->
-            updateCalendarPreferences(preferenceScreen, calendars)
+            updateCalendarPreferences(preferenceScreen, calendars, false)
         })
     }
 
-    private fun updateCalendarPreferences(screen: PreferenceScreen, allCalendars: List<Calendar>) {
+    private fun updateCalendarPreferences(screen: PreferenceScreen, allCalendars: List<Calendar>, isAllView: Boolean) {
         val newCalendars = mutableSetOf<Long>()
+        var categoriesMap = HashMap<String, MutableList<String>?>()
 
         for (calendar in allCalendars) {
             newCalendars.add(calendar.id)
@@ -84,14 +84,25 @@ class MainListPreferences : PreferenceFragmentCompat() {
                 }
                 screen.addPreference(accountCategory)
             }
+            categoriesMap.put(accountCategoryUniqueKey, ArrayList())
 
             // add preference per calendar if not already present
-            val calendarUniqueKey = "calendar_preference_${calendar.id}"
+            val calendarUniqueKey = "calendar_preference_${calendar.id}_${calendar.name}"
             var calendarPreference = screen.findPreference<Preference>(calendarUniqueKey)
             if (calendarPreference == null) {
                 calendarPreference = Preference(context)
                 accountCategory.addPreference(calendarPreference)
             }
+
+            var visibility = calendar.visible
+            if (isAllView) {
+                visibility = true
+            }
+
+            if (visibility) {
+                categoriesMap[accountCategoryUniqueKey]?.add(calendarUniqueKey)
+            }
+
             calendarPreference.apply {
                 key = calendarUniqueKey
                 title = if (calendar.displayName.isNullOrBlank()) getString(R.string.preferences_calendar_no_display_name) else calendar.displayName
@@ -99,6 +110,7 @@ class MainListPreferences : PreferenceFragmentCompat() {
                 order = if (calendar.isPrimary) 1 else 2 // primary calendar is first, others are alphabetically ordered below
                 icon = getCalendarIcon(calendar.color, calendar.visible, calendar.syncEvents)
                 summary = getCalendarSummary(calendar.visible, calendar.syncEvents)
+                isVisible = true
             }
             // pass-through calendar id for CalendarPreferences
             calendarPreference.extras.putLong(CalendarPreferences.ARG_CALENDAR_ID, calendar.id)
@@ -123,6 +135,12 @@ class MainListPreferences : PreferenceFragmentCompat() {
         }
         categoriesToDelete.forEach {
             screen.removePreference(it)
+        }
+
+        categoriesMap.forEach { entry ->
+            val categoryUniqueId = entry.key
+            val preferenceCategory = screen.findPreference<PreferenceCategory>(categoryUniqueId)
+            preferenceCategory?.isVisible = (entry.value as MutableList).size != 0
         }
 
         currentCalendars = newCalendars
@@ -185,6 +203,22 @@ class MainListPreferences : PreferenceFragmentCompat() {
         screen.addPreference(addCaldavPreference)
         screen.addPreference(addEtesyncPreference)
         screen.addPreference(addOfflinePreference)
+
+        var viewAll = SwitchPreference(context).apply {
+            key = VIEW_ALL_PREFERENCE
+            title = getString(R.string.preferences_calendar_visible_on_main_list)
+            isChecked = false
+        }
+
+        viewAll.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { preference, newValue ->
+                mainListViewModel.getCalendarsOrderedByAccount()
+                    .observe(viewLifecycleOwner, Observer { calendars ->
+                        updateCalendarPreferences(preferenceScreen, calendars, newValue as Boolean)
+                    })
+                true
+            }
+        screen.addPreference(viewAll)
     }
 
     private fun addOfflineCalendar() {
@@ -263,8 +297,9 @@ class MainListPreferences : PreferenceFragmentCompat() {
         // Add an observer on the LiveData returned by getCalendarsOrderedByAccount.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
+        val isChecked: Boolean = preferenceScreen.findPreference<SwitchPreference>(VIEW_ALL_PREFERENCE)?.isChecked as Boolean
         mainListViewModel.getCalendarsOrderedByAccount().observe(viewLifecycleOwner, Observer<List<Calendar>> { calendars ->
-            updateCalendarPreferences(preferenceScreen, calendars)
+            updateCalendarPreferences(preferenceScreen, calendars, isChecked)
         })
     }
 
