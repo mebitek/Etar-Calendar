@@ -783,6 +783,7 @@
     <string name="preferences_calendar_synchronize">Synchronize this calendar</string>
     <string name="preferences_calendar_color_warning_title">Warning</string>
     <string name="preferences_calendar_color_warning_message">Changing the color may be reverted when the calendar is synchronized again.\n\nIn DAVx⁵ \'Manage calendar colors\' can be disabled to prevent this.</string>
+    <string name="preferences_calendar_visible_on_main_list">Display All</string>
     <string name="preferences_calendar_color_warning_button">I understand</string>
     <string name="preferences_calendar_delete_message">Do you really want to delete this calendar?</string>
     <string name="preferences_calendar_delete_delete">Delete calendar</string>

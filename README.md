@@ -5,6 +5,7 @@
   - view task on day, week, month and agenda view
   - share task as VTODO
   - widget show tasks
+  - add option to show/hide non-visible calendars in main preferences list
 
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar
