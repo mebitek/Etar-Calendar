@@ -2,6 +2,7 @@
 
 * #### current features
   - view task on day, week, month and agenda view
+  - share task as VTODO
 
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar
