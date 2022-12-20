@@ -1,6 +1,7 @@
 ### mebitek Etar Fork
 
 * #### current features
+  - view task detail with markdown support
   - view task on day, week, month and agenda view
   - share task as VTODO
   - widget show tasks
