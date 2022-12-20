@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.tasklist.TaskListPlugin;
 import ws.xsoh.etar.R;
 
 public class ExpandableTextView extends LinearLayout implements OnClickListener {
@@ -38,25 +40,30 @@ public class ExpandableTextView extends LinearLayout implements OnClickListener 
     private Drawable mExpandDrawable;
     private Drawable mCollapseDrawable;
 
+    private Markwon markwon;
+
     public ExpandableTextView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
-        init();
+        init(context);
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        init(context);
     }
 
-    void init() {
+    void init(Context context) {
         mMaxCollapsedLines = getResources().getInteger((R.integer.event_info_desc_line_num));
         mExpandDrawable = getResources().getDrawable(R.drawable.ic_expand_small);
         mCollapseDrawable = getResources().getDrawable(R.drawable.ic_collapse_small);
+        markwon = Markwon.builder(context)
+                .usePlugin(TaskListPlugin.create(context))
+                .build();
     }
 
     @Override
@@ -123,7 +130,7 @@ public class ExpandableTextView extends LinearLayout implements OnClickListener 
             findViews();
         }
         String trimmedText = text.trim();
-        mTv.setText(trimmedText);
+        markwon.setMarkdown(mTv, trimmedText);
         this.setVisibility(trimmedText.length() == 0 ? View.GONE : View.VISIBLE);
     }
 }

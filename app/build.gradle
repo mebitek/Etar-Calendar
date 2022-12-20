@@ -109,4 +109,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
+    // Markdown
+    def markwonVersion = "4.6.2"
+    implementation "io.noties.markwon:core:${markwonVersion}"
+    implementation "io.noties.markwon:ext-tasklist:${markwonVersion}"
+
 }
