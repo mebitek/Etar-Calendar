@@ -1,7 +1,7 @@
 ### mebitek Etar Fork
 
 * #### current features
-  - view task on day, week and month view
+  - view task on day, week, month and agenda view
 
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar

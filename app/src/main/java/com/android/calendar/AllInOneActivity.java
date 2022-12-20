@@ -1006,27 +1006,28 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
         } else if (itemId == R.id.action_info) {
             checkAndRequestDisablingDoze();
         } else if (itemId == R.id.action_view_agenda_tasks || itemId == R.id.action_view_agenda_events) {
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            long millis = Utils.timeFromIntentInMillis(getIntent());
-            AgendaFragment frag = new AgendaFragment(millis, false);
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                long millis = Utils.timeFromIntentInMillis(getIntent());
+                AgendaFragment frag = new AgendaFragment(millis, false);
 
-            if (itemId == R.id.action_view_agenda_tasks) {
-                frag.isTask = true;
-                mOptionsMenu.findItem(R.id.action_view_agenda_events).setVisible(true);
-            } else if (itemId == R.id.action_view_agenda_events) {
-                frag.isTask = false;
-                mOptionsMenu.findItem(R.id.action_view_agenda_tasks).setVisible(true);
-            }
-            item.setVisible(false);
+                if (itemId == R.id.action_view_agenda_tasks) {
+                    frag.isTask = true;
+                    mOptionsMenu.findItem(R.id.action_view_agenda_events).setVisible(true);
+                } else if (itemId == R.id.action_view_agenda_events) {
+                    frag.isTask = false;
+                    mOptionsMenu.findItem(R.id.action_view_agenda_tasks).setVisible(true);
+                }
+                item.setVisible(false);
 
-            transaction.replace(R.id.main_pane, frag);
-            mController.registerEventHandler(R.id.main_pane, (EventHandler) frag);
-            transaction.commit();
+                transaction.replace(R.id.main_pane, frag);
+                mController.registerEventHandler(R.id.main_pane, (EventHandler) frag);
+                transaction.commit();
 
-            return false;
-        } else {
-            return mExtensions.handleItemSelected(item, this);
+
+                return false;
+            } else {
+                return mExtensions.handleItemSelected(item, this);
         }
 
         return true;
@@ -1398,6 +1399,7 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
                 }
             }
             updateViewSettingsVisiblility();
+            updateViewAgentaSwitchVisibility();
             displayTime = event.selectedTime != null ? event.selectedTime.toMillis()
                     : event.startTime.toMillis();
             if (!mIsTabletConfig) {
