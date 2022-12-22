@@ -27,7 +27,14 @@ import android.view.View;
 import com.android.calendar.Utils;
 import com.android.calendarcommon2.Time;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimeZone;
 
 import ws.xsoh.etar.R;
 
