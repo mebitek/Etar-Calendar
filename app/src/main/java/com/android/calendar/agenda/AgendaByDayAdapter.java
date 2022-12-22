@@ -32,7 +32,12 @@ import com.android.calendar.Utils;
 import com.android.calendar.agenda.AgendaWindowAdapter.DayAdapterInfo;
 import com.android.calendarcommon2.Time;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Locale;
 
 import ws.xsoh.etar.R;
 
