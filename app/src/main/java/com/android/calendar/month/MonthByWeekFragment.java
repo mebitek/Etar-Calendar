@@ -53,7 +53,13 @@ import com.android.calendar.Utils;
 import com.android.calendar.event.CreateEventDialogFragment;
 import com.android.calendarcommon2.Time;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import ws.xsoh.etar.R;
 
