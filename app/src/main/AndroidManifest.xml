@@ -35,6 +35,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="org.dmfs.permission.READ_TASKS" />
     <uses-permission android:name="org.dmfs.permission.WRITE_TASKS" />
+    <uses-permission android:name="foundation.e.permission.READ_TASKS" />
+    <uses-permission android:name="foundation.e.permission.WRITE_TASKS" />
 
     <queries>
         <package android:name="at.bitfire.davdroid" />
@@ -56,6 +58,7 @@
         </intent>
         <provider android:authorities="org.tasks" android:exported="false" />
         <provider android:authorities="org.dmfs.tasks" android:exported="false" />
+        <provider android:authorities="foundation.e.tasks" android:exported="false" />
     </queries>
 
     <application android:name="com.android.calendar.CalendarApplication"

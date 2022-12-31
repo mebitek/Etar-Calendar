@@ -4,10 +4,10 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class DmfsOpenTasksContract implements BaseColumns {
-    public static final String AUTHORITY = "org.dmfs.tasks";
+    public static final String AUTHORITY = "foundation.e.tasks";
 
-    public static final String TASK_READ_PERMISSION = "org.dmfs.permission.READ_TASKS";
-    public static final String TASK_WRITE_PERMISSION = "org.dmfs.permission.WRITE_TASKS";
+    public static final String TASK_READ_PERMISSION = "foundation.e.permission.READ_TASKS";
+    public static final String TASK_WRITE_PERMISSION = "foundation.e.permission.WRITE_TASKS";
 
     public static class Tasks {
 
