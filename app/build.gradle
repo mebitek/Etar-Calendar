@@ -15,8 +15,8 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
-        versionCode 32
-        versionName "1.0.30"
+        versionCode 33
+        versionName "1.0.33"
         applicationId "ws.xsoh.etar"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -115,3 +115,5 @@ dependencies {
     implementation "io.noties.markwon:ext-tasklist:${markwonVersion}"
 
 }
+
+preBuild.dependsOn (":aarGen")

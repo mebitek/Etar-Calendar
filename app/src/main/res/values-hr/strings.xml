@@ -22,22 +22,22 @@
     <string name="date_time_fmt" msgid="1642972650061946484"><xliff:g id="date">%1$s</xliff:g>, <xliff:g id="time_interval">%2$s</xliff:g></string>
     <string name="no_title_label" msgid="302177118061368042">"(bez naslova)"</string>
     <plurals name="Nminutes">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> minuta</item>
+        <item quantity="one">1 minuta</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> minute</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> minuta</item>
     </plurals>
     <plurals name="Nmins">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> min</item>
+        <item quantity="one">1 min</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> min</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> min</item>
     </plurals>
     <plurals name="Nhours">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> sat</item>
+        <item quantity="one">1 sat</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> sata</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> sati</item>
     </plurals>
     <plurals name="Ndays">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> dan</item>
+        <item quantity="one">1 dan</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> dana</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> dana</item>
     </plurals>
@@ -296,7 +296,7 @@
     <string name="view_settings">Pogledaj postavke</string>
     <string name="preferences_month_view_portrait">Prikaz mjeseca (okomito)</string>
     <string name="preferences_month_view_landscape">Prikaz mjeseca (vodoravno)</string>
-    <string name="display_options">Detalji</string>
+    <string name="display_options">Prikaži opcije</string>
     <string name="display_time">Prikaži vrijeme</string>
     <string name="display_location">Prikaži lokaciju</string>
     <string name="show_time_no">Ne prikazuj vrijeme</string>
@@ -331,7 +331,7 @@
     <string name="preferences_calendar_delete_message">Zaista želiš izbrisati ovaj kalendar\?</string>
     <string name="preferences_calendar_delete_delete">Izbriši kalendar</string>
     <string name="preferences_calendar_delete_cancel">Odustani</string>
-    <string name="preferences_menu_about">Informacije</string>
+    <string name="preferences_menu_about">O programu Etar</string>
     <string name="offline_account_name">Lokalni kalendar</string>
     <string name="app_copyright">© 2015. – <xliff:g>%1$s</xliff:g>. The Etar Project. Dijelovi © 2005. – <xliff:g>%1$s</xliff:g>. The Android Open Source Project.</string>
     <string name="authors">Autori</string>
@@ -355,10 +355,13 @@
     <string name="preferences_pure_black_night_mode">Crni noćni modus</string>
     <string name="no_reminder_label">Ništa</string>
     <plurals name="Nweeks">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> tjedan</item>
+        <item quantity="one">1 tjedan</item>
         <item quantity="few"><xliff:g id="count">%d</xliff:g> tjedna</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> tjedana</item>
     </plurals>
     <string name="foreground_notification_title">Planiranje novih podsjetnika …</string>
-    <string name="after_start_of_event">after start of event</string>
+    <string name="after_start_of_event">nakon početka događaja</string>
+    <string name="preferences_real_event_colors">Koristi boje stvarnog događaja</string>
+    <string name="menu_info">Informacije</string>
+    <string name="duplicate_label">Dupliciraj</string>
 </resources>

@@ -23,18 +23,21 @@
     <string name="no_title_label" msgid="302177118061368042">"(Без назви)"</string>
     <plurals name="Nminutes">
         <item quantity="one">1 хвилина</item>
-        <item quantity="few"><xliff:g id="COUNT">%d</xliff:g> хвилини</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> хвилини</item>
         <item quantity="many"><xliff:g id="count">%d</xliff:g> хвилин</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> хвилин</item>
     </plurals>
     <plurals name="Nmins">
-        <item quantity="one">1 хв.</item>
-        <item quantity="few"><xliff:g id="COUNT">%d</xliff:g> хв.</item>
-        <item quantity="many"><xliff:g id="count">%d</xliff:g> хв.</item>
+        <item quantity="one">1 хвилина</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> хвилини</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> хвилин</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> хвилин</item>
     </plurals>
     <plurals name="Nhours">
         <item quantity="one">1 година</item>
-        <item quantity="few"><xliff:g id="COUNT">%d</xliff:g> години</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> години</item>
         <item quantity="many"><xliff:g id="count">%d</xliff:g> годин</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> годин</item>
     </plurals>
     <plurals name="Ndays">
         <item quantity="one">1 день</item>
@@ -42,10 +45,10 @@
         <item quantity="many"><xliff:g id="count">%d</xliff:g> днів</item>
     </plurals>
     <plurals name="weekN">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> тиждень</item>
-        <item quantity="few"><xliff:g id="count">%d</xliff:g> тижні</item>
-        <item quantity="many"><xliff:g id="count">%d</xliff:g> тижнів</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> тижнів</item>
+        <item quantity="one">Тиждень <xliff:g id="count">%d</xliff:g></item>
+        <item quantity="few">Тиждень <xliff:g id="count">%d</xliff:g></item>
+        <item quantity="many">Тиждень <xliff:g id="count">%d</xliff:g></item>
+        <item quantity="other">Тиждень <xliff:g id="count">%d</xliff:g></item>
     </plurals>
     <string name="calendar_refresh" msgid="6172731193680500025">"Оновити"</string>
     <string name="show_day_view" msgid="5782512782605466016">Показати день</string>
@@ -139,8 +142,9 @@
     </plurals>
     <plurals name="daily">
         <item quantity="one">Щодня</item>
-        <item quantity="few">Кожні <xliff:g id="number">%d</xliff:g> дні</item>
-        <item quantity="many">Кожні <xliff:g id="number">%d</xliff:g> днів</item>
+        <item quantity="few">Що <xliff:g id="number">%d</xliff:g> дні</item>
+        <item quantity="many">Що <xliff:g id="number">%d</xliff:g> днів</item>
+        <item quantity="other">Що <xliff:g id="number">%d</xliff:g> днів</item>
     </plurals>
     <string name="every_weekday" msgid="5896574838353902978">У будні (пн.-пт.)</string>
     <plurals name="weekly">
@@ -367,4 +371,5 @@
     <string name="after_start_of_event">після початку події</string>
     <string name="preferences_real_event_colors">Використовувати реальні кольори подій</string>
     <string name="menu_info">Інформація</string>
+    <string name="duplicate_label">Дублікат</string>
 </resources>
