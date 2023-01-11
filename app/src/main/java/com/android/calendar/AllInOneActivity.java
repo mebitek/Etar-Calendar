@@ -836,6 +836,22 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
     }
 
     protected void updateViewAgentaSwitchVisibility() {
+
+
+        if (ContextCompat.checkSelfPermission(this, DmfsOpenTasksContract.TASK_READ_PERMISSION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (mViewAgendaTasks != null) {
+                mViewAgendaTasks.setVisible(false);
+                mViewAgendaTasks.setEnabled(false);
+            }
+            if (mViewAgendaEvents != null) {
+                mViewAgendaEvents.setVisible(false);
+                mViewAgendaEvents.setEnabled(false);
+            }
+            return;
+        }
+
+
         boolean viewAgendaSwitchVisible = mController.getViewType() == ViewType.AGENDA;
         if (mViewAgendaTasks != null) {
             mViewAgendaTasks.setVisible(viewAgendaSwitchVisible);
