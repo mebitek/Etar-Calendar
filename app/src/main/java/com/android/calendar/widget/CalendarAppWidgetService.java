@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import androidx.core.content.ContextCompat;
 import com.android.calendar.DynamicTheme;
 import com.android.calendar.Event;
 import com.android.calendar.Utils;
@@ -532,9 +534,12 @@ public class CalendarAppWidgetService extends RemoteViewsService {
                     int mFirstLoadedJulianDay = Time.getJulianDay(begin, new Time().getGmtOffset());
                     int mLastLoadedJulianDay = Time.getJulianDay(end, new Time().getGmtOffset());
 
-                    Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
-                    MatrixCursor matrixCursorTasks = Utils.matrixCursorFromCursor(cTasks);
-                    mModel.buildFromCursor(matrixCursorTasks, tz, true);
+                    if (ContextCompat.checkSelfPermission(mContext, DmfsOpenTasksContract.TASK_READ_PERMISSION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+                        MatrixCursor matrixCursorTasks = Utils.matrixCursorFromCursor(cTasks);
+                        mModel.buildFromCursor(matrixCursorTasks, tz, true);
+                    }
 
                     mModel.populateBuckets(tz);
                 } finally {
