@@ -22,6 +22,7 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.StateListDrawable;
@@ -43,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
+import androidx.core.content.ContextCompat;
 import com.android.calendar.CalendarController;
 import com.android.calendar.CalendarController.EventInfo;
 import com.android.calendar.CalendarController.EventType;
@@ -51,6 +53,7 @@ import com.android.calendar.DynamicTheme;
 import com.android.calendar.Event;
 import com.android.calendar.Utils;
 import com.android.calendar.event.CreateEventDialogFragment;
+import com.android.calendar.persistence.tasks.DmfsOpenTasksContract;
 import com.android.calendarcommon2.Time;
 
 import java.util.ArrayList;
@@ -404,10 +407,13 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
             Event.buildEventsFromCursor(
                     events, data, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
 
-            Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), Event.TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
-            Event.buildTasksFromCursor(events, cTasks, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+            if (ContextCompat.checkSelfPermission(mContext, DmfsOpenTasksContract.TASK_READ_PERMISSION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), Event.TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
+                Event.buildTasksFromCursor(events, cTasks, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
 
-            Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
+                Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
+            }
 
             ((MonthByWeekAdapter) mAdapter).setEvents(mFirstLoadedJulianDay,
                     mLastLoadedJulianDay - mFirstLoadedJulianDay + 1, events);
