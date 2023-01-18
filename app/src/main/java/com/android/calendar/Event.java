@@ -20,6 +20,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
 import com.android.calendar.persistence.tasks.DmfsOpenTasksContract;
 import com.android.calendar.settings.GeneralPreferences;
 
@@ -273,10 +275,13 @@ public class Event implements Cloneable {
             buildEventsFromCursor(events, cAllday, context, startDay, endDay);
 
             // we use tasks as events
-            cTasks = instancesQueryForTasks(context.getContentResolver(), TASK_PROJECTION, startDay, endDay);
+            if (ContextCompat.checkSelfPermission(context, DmfsOpenTasksContract.TASK_READ_PERMISSION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                cTasks = instancesQueryForTasks(context.getContentResolver(), TASK_PROJECTION, startDay, endDay);
 
-            buildTasksFromCursor(events, cTasks, context, startDay, endDay);
-            Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
+                buildTasksFromCursor(events, cTasks, context, startDay, endDay);
+                Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
+            }
 
 
         } finally {
