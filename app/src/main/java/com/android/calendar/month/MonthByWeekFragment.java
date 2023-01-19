@@ -408,7 +408,7 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
                     events, data, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
 
             if (ContextCompat.checkSelfPermission(mContext, DmfsOpenTasksContract.TASK_READ_PERMISSION)
-                    != PackageManager.PERMISSION_GRANTED) {
+                    == PackageManager.PERMISSION_GRANTED) {
                 Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), Event.TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
                 Event.buildTasksFromCursor(events, cTasks, mContext, mFirstLoadedJulianDay, mLastLoadedJulianDay);
 
