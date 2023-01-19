@@ -276,7 +276,7 @@ public class Event implements Cloneable {
 
             // we use tasks as events
             if (ContextCompat.checkSelfPermission(context, DmfsOpenTasksContract.TASK_READ_PERMISSION)
-                    != PackageManager.PERMISSION_GRANTED) {
+                    == PackageManager.PERMISSION_GRANTED) {
                 cTasks = instancesQueryForTasks(context.getContentResolver(), TASK_PROJECTION, startDay, endDay);
 
                 buildTasksFromCursor(events, cTasks, context, startDay, endDay);
