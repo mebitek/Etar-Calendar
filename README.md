@@ -1,10 +1,3 @@
-### mebitek Etar Fork
-
-* #### current features
-  - view task on day, week, month and agenda view
-  - share task as VTODO
-  - widget show tasks
-
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar
 Etar (from Arabic:  `إِيتَار`)  is an open source material designed calendar made for everyone!
@@ -30,7 +23,10 @@ this app would be just a dream. So thanks to them!
 - Support offline calendar.
 - Agenda widget.
 - Multilingual UI.
-
+- view task on day, week, month and agenda view
+- share task as VTODO
+- widget show tasks
+- 
 ## How to use Etar
 Store your calendar on the phone only:
   - Create an offline calendar.
