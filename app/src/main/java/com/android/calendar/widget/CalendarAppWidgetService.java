@@ -535,7 +535,7 @@ public class CalendarAppWidgetService extends RemoteViewsService {
                     int mLastLoadedJulianDay = Time.getJulianDay(end, new Time().getGmtOffset());
 
                     if (ContextCompat.checkSelfPermission(mContext, DmfsOpenTasksContract.TASK_READ_PERMISSION)
-                            != PackageManager.PERMISSION_GRANTED) {
+                            == PackageManager.PERMISSION_GRANTED) {
                         Cursor cTasks = Event.instancesQueryForTasks(mContext.getContentResolver(), TASK_PROJECTION, mFirstLoadedJulianDay, mLastLoadedJulianDay);
                         MatrixCursor matrixCursorTasks = Utils.matrixCursorFromCursor(cTasks);
                         mModel.buildFromCursor(matrixCursorTasks, tz, true);
