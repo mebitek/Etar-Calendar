@@ -417,6 +417,8 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private TextView mWhenDateTime;
     private TextView mWhere;
     private TextView mWhenRepeat;
+    private TextView mEventOrganizer;
+    private TextView mCalendarName;
     private ExpandableTextView mDesc;
     private AttendeesView mLongAttendees;
     private Button emailAttendeesButton;
@@ -849,6 +851,8 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         mWhenDateTime = (TextView) mView.findViewById(R.id.when_datetime);
         mWhere = (TextView) mView.findViewById(R.id.where);
         mWhenRepeat = (TextView) mView.findViewById(R.id.when_repeat);
+        mEventOrganizer = (TextView) mView.findViewById(R.id.organizer);
+        mCalendarName = (TextView) mView.findViewById(R.id.calendar_name);
 
         mDesc =  mView.findViewById(R.id.description);
         mHeadlines = mView.findViewById(R.id.event_info_headline);
@@ -1036,7 +1040,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                             mEventOrganizerDisplayName = name;
                             if (!mIsOrganizer) {
                                 setVisibilityCommon(view, R.id.organizer_container, View.VISIBLE);
-                                setTextCommon(view, R.id.organizer, mEventOrganizerDisplayName);
+                                mEventOrganizer.setText(mEventOrganizerDisplayName);
                             }
                         }
                     }
@@ -1946,7 +1950,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             }
 
             if (!mIsOrganizer && !TextUtils.isEmpty(mEventOrganizerDisplayName)) {
-                setTextCommon(view, R.id.organizer, mEventOrganizerDisplayName);
+                mEventOrganizer.setText(mEventOrganizerDisplayName);
                 setVisibilityCommon(view, R.id.organizer_container, View.VISIBLE);
             } else {
                 setVisibilityCommon(view, R.id.organizer_container, View.GONE);
@@ -2705,7 +2709,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                     }
 
                     setVisibilityCommon(mView, R.id.calendar_container, View.VISIBLE);
-                    setTextCommon(mView, R.id.calendar_name, sb);
+                    mCalendarName.setText(sb);
                     break;
                 case TOKEN_QUERY_DUPLICATE_TASK_LIST:
                     sb = new SpannableStringBuilder();

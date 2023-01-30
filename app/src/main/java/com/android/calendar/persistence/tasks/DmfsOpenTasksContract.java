@@ -9,6 +9,8 @@ public class DmfsOpenTasksContract implements BaseColumns {
     public static final String TASK_READ_PERMISSION = "foundation.e.permission.READ_TASKS";
     public static final String TASK_WRITE_PERMISSION = "foundation.e.permission.WRITE_TASKS";
 
+    public static final String ACCOUNT_TYPE_LOCAL = "org.dmfs.account.LOCAL";
+
     public static class Tasks {
 
         public static final Uri PROVIDER_URI = Uri.parse("content://" + AUTHORITY + "/tasks");
