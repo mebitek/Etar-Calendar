@@ -77,7 +77,7 @@ class MainListPreferences : PreferenceFragmentCompat() {
             if (accountCategory == null) {
                 accountCategory = PreferenceCategory(context).apply {
                     key = accountCategoryUniqueKey
-                    title = calendar.accountName
+                    title = if (calendar.isTasks) "My task" else calendar.accountName
                     icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_account_circle)
                     order = if (calendar.isLocal) 10 else 11 // show offline calendar first
                     isOrderingAsAdded = false // use alphabetic ordering for children

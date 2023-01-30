@@ -1,12 +1,3 @@
-### mebitek Etar Fork
-
-* #### current features
-  - view task detail with markdown support
-  - view task on day, week, month and agenda view
-  - share task as VTODO
-  - widget show tasks
-  - add option to show/hide non-visible calendars in main preferences list
-
 ![Etar Calendar](metadata/en-US/images/featureGraphic.png)
 # Etar Calendar
 Etar (from Arabic:  `إِيتَار`)  is an open source material designed calendar made for everyone!
@@ -32,7 +23,10 @@ this app would be just a dream. So thanks to them!
 - Support offline calendar.
 - Agenda widget.
 - Multilingual UI.
-
+- view task on day, week, month and agenda view
+- share task as VTODO
+- widget show tasks
+- 
 ## How to use Etar
 Store your calendar on the phone only:
   - Create an offline calendar.
@@ -83,6 +77,7 @@ Install and extract Android SDK command line tools.
 tools/bin/sdkmanager platform-tools
 export ANDROID_HOME=/path/to/android-sdk/
 git submodule update --init
+gradle aarGen
 gradle :app:assembleDebug
 ```
 ## License
