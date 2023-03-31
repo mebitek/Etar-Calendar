@@ -1964,7 +1964,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             if (isTaskList) {
                 mHandler.startQuery(TOKEN_QUERY_VISIBLE_TASK_LIST, null, DmfsOpenTasksContract.TaskLists.PROVIDER_URI,
                         TASK_LIST_PROJECTION, CALENDARS_VISIBLE_WHERE, new String[]{"1"}, null);
-            } else{
+            } else {
                 mHandler.startQuery(TOKEN_QUERY_VISIBLE_CALENDARS, null, Calendars.CONTENT_URI,
                         CALENDARS_PROJECTION, CALENDARS_VISIBLE_WHERE, new String[]{"1"}, null);
             }
