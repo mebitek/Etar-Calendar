@@ -20,6 +20,8 @@ import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static com.android.calendar.CalendarController.EVENT_EDIT_ON_LAUNCH;
+import static com.android.calendar.event.EditEventHelper.EXTENDED_INDEX_NAME;
+import static com.android.calendar.event.EditEventHelper.EXTENDED_INDEX_VALUE;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -56,6 +58,7 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Colors;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.provider.CalendarContract.ExtendedProperties;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Intents;
@@ -110,7 +113,12 @@ import com.android.calendar.event.EditEventActivity;
 import com.android.calendar.event.EditEventHelper;
 import com.android.calendar.event.EventColorPickerDialog;
 import com.android.calendar.event.EventViewUtils;
-import com.android.calendar.icalendar.*;
+import com.android.calendar.event.ExtendedProperty;
+import com.android.calendar.icalendar.IcalendarUtils;
+import com.android.calendar.icalendar.Organizer;
+import com.android.calendar.icalendar.VCalendar;
+import com.android.calendar.icalendar.VEvent;
+import com.android.calendar.icalendar.VTodo;
 import com.android.calendar.persistence.tasks.DmfsOpenTasksContract;
 import com.android.calendar.settings.GeneralPreferences;
 import com.android.calendarcommon2.DateException;
@@ -120,6 +128,8 @@ import com.android.calendarcommon2.Time;
 import com.android.colorpicker.ColorPickerSwatch.OnColorSelectedListener;
 import com.android.colorpicker.HsvColorComparator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -127,6 +137,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -220,7 +231,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private static final int TOKEN_QUERY_REMINDERS = 1 << 4;
     private static final int TOKEN_QUERY_VISIBLE_CALENDARS = 1 << 5;
     private static final int TOKEN_QUERY_COLORS = 1 << 6;
-
+    private static final int TOKEN_QUERY_EXTENDED = 1 << 7;
     private static final int TOKEN_QUERY_TASK = 3; // 1
     private static final int TOKEN_QUERY_TASK_LIST = 7; // 2
     private static final int TOKEN_QUERY_VISIBLE_TASK_LIST = 11 ; // 32
@@ -229,7 +240,6 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             | TOKEN_QUERY_ATTENDEES | TOKEN_QUERY_CALENDARS | TOKEN_QUERY_EVENT
             | TOKEN_QUERY_REMINDERS | TOKEN_QUERY_VISIBLE_CALENDARS | TOKEN_QUERY_COLORS
             | TOKEN_QUERY_TASK | TOKEN_QUERY_VISIBLE_TASK_LIST | TOKEN_QUERY_DUPLICATE_TASK_LIST |TOKEN_QUERY_TASK_LIST;
-
 
     public static final File EXPORT_SDCARD_DIRECTORY = new File(
             Environment.getExternalStorageDirectory(), "CalendarEvents");
@@ -352,6 +362,14 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private static final int REMINDERS_MINUTES_ID = 1;
     private static final int REMINDERS_METHOD_ID = 2;
     private static final String REMINDERS_WHERE = Reminders.EVENT_ID + "=?";
+    private static final String[] EXTENDED_PROJECTION = new String[] {
+            ExtendedProperties._ID,                 // 0
+            ExtendedProperties.EVENT_ID,            // 1
+            ExtendedProperties.NAME,                // 2
+            ExtendedProperties.VALUE                // 3
+    };
+    private static final String EXTENDED_WHERE = ExtendedProperties.EVENT_ID + "=?";
+    private static final String EXTENDED_SORT_ORDER = ExtendedProperties.NAME + " ASC";
     private static final int FADE_IN_TIME = 300;   // in milliseconds
     private static final int LOADING_MSG_DELAY = 600;   // in milliseconds
     private static final int LOADING_MSG_MIN_DISPLAY_TIME = 600;
@@ -382,6 +400,8 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private Cursor mAttendeesCursor;
     private Cursor mCalendarsCursor;
     private Cursor mRemindersCursor;
+    private Cursor mExtendedCursor;
+    private String mEventUrl;
     private long mStartMillis;
     private long mEndMillis;
     private boolean mAllDay;
@@ -420,6 +440,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private TextView mEventOrganizer;
     private TextView mCalendarName;
     private ExpandableTextView mDesc;
+    private ExpandableTextView mUrl;
     private AttendeesView mLongAttendees;
     private Button emailAttendeesButton;
     private Menu mMenu = null;
@@ -855,6 +876,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         mCalendarName = (TextView) mView.findViewById(R.id.calendar_name);
 
         mDesc =  mView.findViewById(R.id.description);
+        mUrl =  mView.findViewById(R.id.url);
         mHeadlines = mView.findViewById(R.id.event_info_headline);
         mLongAttendees = (AttendeesView) mView.findViewById(R.id.long_attendee_list);
 
@@ -1409,6 +1431,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, mEndMillis);
         intent.putExtra(EditEventActivity.EXTRA_EVENT_REMINDERS, mReminders);
         intent.putExtra(EditEventActivity.EXTRA_EVENT_COLOR, mCurrentColor);
+        intent.putExtra(ExtendedProperty.URL, mEventUrl);
 
         final String allAttendees = Stream.of(mAcceptedAttendees, mDeclinedAttendees, mTentativeAttendees, mNoResponseAttendees)
                 .flatMap(Collection::stream)
@@ -1743,6 +1766,13 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         updateAdaptiveTextAndIconColors();
     }
 
+    private void updateExtended() {
+        // Url
+        if (mEventUrl != null && !mEventUrl.isBlank()) {
+            mUrl.setText(mEventUrl);
+        }
+    }
+
     private void updateWhenTextView(View view) {
         Context context = view.getContext();
 
@@ -1886,6 +1916,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         addFieldToAccessibilityEvent(text, mWhenDateTime, null);
         addFieldToAccessibilityEvent(text, mWhere, null);
         addFieldToAccessibilityEvent(text, null, mDesc);
+        addFieldToAccessibilityEvent(text, null, mUrl);
 
         if (mResponseRadioGroup.getVisibility() == View.VISIBLE) {
             int id = mResponseRadioGroup.getCheckedRadioButtonId();
@@ -1933,7 +1964,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             if (isTaskList) {
                 mHandler.startQuery(TOKEN_QUERY_VISIBLE_TASK_LIST, null, DmfsOpenTasksContract.TaskLists.PROVIDER_URI,
                         TASK_LIST_PROJECTION, CALENDARS_VISIBLE_WHERE, new String[]{"1"}, null);
-            } else{
+            } else {
                 mHandler.startQuery(TOKEN_QUERY_VISIBLE_CALENDARS, null, Calendars.CONTENT_URI,
                         CALENDARS_PROJECTION, CALENDARS_VISIBLE_WHERE, new String[]{"1"}, null);
             }
@@ -2151,6 +2182,25 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             EventViewUtils.updateAddReminderButton(mView, mReminderViews, mMaxReminders);
             // TODO show unsupported reminder types in some fashion.
         }
+    }
+
+    public void initExtended(@NotNull Cursor cursor) {
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(EXTENDED_INDEX_NAME);
+            String value = cursor.getString(EXTENDED_INDEX_VALUE);
+
+            // Handle all extended properties
+            switch (name) {
+                case ExtendedProperty.URL_NAME:
+                case ExtendedProperty.URL_NAME_PRIV:
+                    mEventUrl = value;
+                    break;
+                default:
+                    Log.i(TAG, "Got an unhandled extended property: " + name);
+                    break;
+            }
+        }
+        updateExtended();
     }
 
     void updateResponse(View view) {
@@ -2620,6 +2670,12 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                     } else {
                         sendAccessibilityEventIfQueryDone(TOKEN_QUERY_REMINDERS);
                     }
+
+                    // start extended query
+                    uri = CalendarContract.ExtendedProperties.CONTENT_URI;
+                    startQuery(TOKEN_QUERY_EXTENDED, null, uri, EXTENDED_PROJECTION,
+                            EXTENDED_WHERE, args, EXTENDED_SORT_ORDER);
+
                     break;
                 case TOKEN_QUERY_COLORS:
                     ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -2662,6 +2718,10 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                 case TOKEN_QUERY_REMINDERS:
                     mRemindersCursor = Utils.matrixCursorFromCursor(cursor);
                     initReminders(mView, mRemindersCursor);
+                    break;
+                case TOKEN_QUERY_EXTENDED:
+                    mExtendedCursor = Utils.matrixCursorFromCursor(cursor);
+                    initExtended(mExtendedCursor);
                     break;
                 case TOKEN_QUERY_VISIBLE_CALENDARS:
                     if (cursor.getCount() > 1) {

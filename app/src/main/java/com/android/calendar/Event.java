@@ -283,7 +283,6 @@ public class Event implements Cloneable {
                 Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
             }
 
-
         } finally {
             if (cEvents != null) {
                 cEvents.close();
