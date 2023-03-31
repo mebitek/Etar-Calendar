@@ -282,8 +282,7 @@ public class Event implements Cloneable {
                 buildTasksFromCursor(events, cTasks, context, startDay, endDay);
                 Collections.sort(events, Comparator.comparing(u -> new Date(u.getStartMillis())));
             }
-
-
+            
         } finally {
             if (cEvents != null) {
                 cEvents.close();
