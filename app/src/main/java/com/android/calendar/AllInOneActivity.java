@@ -908,7 +908,6 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
         mViewAgendaTasks = menu.findItem(R.id.action_view_agenda_tasks);
         updateViewAgentaSwitchVisibility();
 
-
         MenuItem menuItem = menu.findItem(R.id.action_today);
 
         // replace the default top layer drawable of the today icon with a
