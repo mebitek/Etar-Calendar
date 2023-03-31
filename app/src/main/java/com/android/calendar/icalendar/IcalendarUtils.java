@@ -303,7 +303,6 @@ public class IcalendarUtils {
         vTodo.addAttendee(vAttendee);
     }
 
-
     /**
      * Returns an iCalendar formatted UTC date-time
      * ex: 20141120T120000Z for noon on Nov 20, 2014
